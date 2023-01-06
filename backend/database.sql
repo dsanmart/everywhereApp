@@ -1,8 +1,7 @@
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     username VARCHAR(28) NOT NULL UNIQUE,
-    pass VARCHAR(28) NOT NULL,
-    hashedpass VARCHAR NOT NULL
+    pass VARCHAR NOT NULL
 );
 
 CREATE TABLE recipes(

@@ -5,16 +5,18 @@ const helmet = require('helmet');
 const cors = require('cors');
 const authRouter = require('./routers/authRouter');
 const session = require('express-session');
+const Redis = require('ioredis');
+const redisStore = require('connect-redis')(session);
 const server = require('http').createServer(app);
 require("dotenv").config();  // Import the dotenv package to access the .env file
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 //PRODUCTION
-const useferoute = 'https://dsanmart-recipeapp2-fe-prod.azurewebsites.net';
+//const useferoute = 'https://dsanmart-recipeapp2-fe-prod.azurewebsites.net';
 
 //LOCAL DEVELOPMENT
-//const useferoute = 'http://localhost:3000';
+const useferoute = 'http://localhost:3000';
 
 const io = new Server(server, {
     cors: {
@@ -22,6 +24,8 @@ const io = new Server(server, {
         credentials: "true",
     }
 });
+
+const redisClient = new Redis();
 
 app.use(helmet()); // <-- security
 app.use(cors({  // <-- Cross-Origin Resource Sharing (CORS) allows to make requests to the server deployed at a different domain than the one where the backend is hosted on.
@@ -34,6 +38,7 @@ app.use(session({ // <-- session middleware
     secret: process.env.COOKIE_SECRET, // <-- secret used to sign the session ID cookie
     credentials: true, // <-- allow session cookie from browser to pass through
     name: 'sid', // <-- name of session ID cookie
+    store: new redisStore({client: redisClient}), // <-- connect express-session to connect-redis
     resave: false,
     saveUninitialized: false, // <-- don't save unmodified (saves resources)
     cookie: {

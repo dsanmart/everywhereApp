@@ -16,13 +16,13 @@ router
 .post(async (req, res) => { // POST request to /auth/login manually
     validateForm(req, res);
 
-    const potentialLogin = await pool.query("SELECT id, username, hashedpass FROM users u WHERE u.username = $1", [req.body.username]); // <-- SQL query
+    const potentialLogin = await pool.query("SELECT id, username, pass FROM users u WHERE u.username = $1", [req.body.username]); // <-- SQL query
 
     if (potentialLogin.rows.length > 0) {
         // Found a user with the username
         const isSamePassword = await bcrypt.compare( // <-- Compare the password with the hashed password
             req.body.password, 
-            potentialLogin.rows[0].hashedpass
+            potentialLogin.rows[0].pass
             );
     
         if (isSamePassword) {
@@ -60,7 +60,7 @@ router.post('/signup', async (req, res) => {
         //register user
         console.log("Registering user");
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const newUserQuery = await pool.query("INSERT INTO users (username, pass, hashedpass) VALUES ($1, $2, $3) RETURNING *", [req.body.username, req.body.password, hashedPassword]);
+        const newUserQuery = await pool.query("INSERT INTO users (username, pass) VALUES ($1, $2) RETURNING *", [req.body.username, hashedPassword]);
         // store user id in session cookie
         req.session.user = {
             username: req.body.username,

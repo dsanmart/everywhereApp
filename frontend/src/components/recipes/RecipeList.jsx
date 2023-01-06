@@ -13,8 +13,8 @@ import {
 
 import { FaStar, FaRegStar } from 'react-icons/fa';
 
-const useberoute = 'https://dsanmart-recipeapp2-be-prod.azurewebsites.net'
-//const useberoute = 'http://localhost:4000'
+//const useberoute = 'https://dsanmart-recipeapp2-be-prod.azurewebsites.net'
+const useberoute = 'http://localhost:4000'
 
 const RecipeList = () => {
     const [recipes, setRecipes] = useState([]);
