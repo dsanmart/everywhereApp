@@ -5,7 +5,7 @@ const formSchema = Yup.object().shape({
     password: Yup.string().required("Password is required").min(6, "Password too short").max(20, "Password too long!"),
 });
 
-const validateForm = (req, res) => {
+const validateForm = (req, res, next) => {
     const formData = req.body;
     formSchema
         .validate(formData) // Validate the form data
@@ -16,6 +16,10 @@ const validateForm = (req, res) => {
         .then(valid => { // If the form data is valid, then the promise will resolve
             if (valid) {
                 console.log("Form is valid");
+                next(); // Call the next middleware function
+            } else {
+                res.status(422).send(); // Send a 422 status code to the client
+                console.log("Form is invalid");
             }
         });
 }

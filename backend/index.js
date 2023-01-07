@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const authRouter = require('./routers/authRouter');
 const session = require('express-session');
-const Redis = require('ioredis');
+const redisClient = require('./redis');
 const redisStore = require('connect-redis')(session);
 const server = require('http').createServer(app);
 require("dotenv").config();  // Import the dotenv package to access the .env file
@@ -24,8 +24,6 @@ const io = new Server(server, {
         credentials: "true",
     }
 });
-
-const redisClient = new Redis();
 
 app.use(helmet()); // <-- security
 app.use(cors({  // <-- Cross-Origin Resource Sharing (CORS) allows to make requests to the server deployed at a different domain than the one where the backend is hosted on.
